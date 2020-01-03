@@ -1,53 +1,54 @@
 version: '3'
 #
 services:
-  nginx:
-#    容器名称
-    container_name: v-nginx
-    image: nginx:1.13
-    restart: always
-    ports:
-      - 80:80
-      - 443:443
-#    加载本地目录下的配置文件到容器目标地址下
-    volumes:
-      - ./conf.d:/etc/nginx/conf.d
-      - /tmp/logs:/var/log/nginx
+#  nginx:
+##    容器名称
+#    container_name: springboot-demo-nginx
+#    image: nginx:latest
+#    restart: always
+#    ports:
+#      - 80:80
+#      - 443:443
+##    加载本地目录下的配置文件到容器目标地址下
+#    volumes:
+#      - ./nginx.conf:/etc/nginx/conf.d
+#      - /tmp/logs:/var/log/nginx
 
-  mysql:
-    container_name: v-mysql
-    image: mysql/mysql-server:5.7
-#    此节点下的信息会当作环境变量传入容器
-#    在这里为mysql配置了数据库、密码和权限信息
-    environment:
-      MYSQL_DATABASE: test
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_ROOT_HOST: '%'
-      TZ: Asia/Shanghai
-#      TZ 环境变量将时区指向上海
-#      代表开放的端口信息
-    ports:
-      - "3306:3306"
-#    服务如果没有启动成功就一直尝试
-    volumes:
-      - ./mysql_data:/var/lib/mysql
-    restart: always
+#  mysql:
+#    container_name: springboot-demo-mysql
+#    image: mysql/mysql-server:latest
+##    此节点下的信息会当作环境变量传入容器
+##    在这里为mysql配置了数据库、密码和权限信息
+#    environment:
+#      MYSQL_DATABASE: root
+#      MYSQL_ROOT_PASSWORD: 123456
+#      MYSQL_ROOT_HOST: '%'
+#      TZ: Asia/Shanghai
+##      TZ 环境变量将时区指向上海
+##      代表开放的端口信息
+#    ports:
+#      - 3306:3306
+##    服务如果没有启动成功就一直尝试
+#    volumes:
+#      - ./my.cnf:/etc/my.cnf
+#      - ./mysql_data:/var/lib/mysql
+#    restart: always
 
   app:
+    container_name: springboot-demo
     restart: always
-    build: ./app
-    working_dir: /app
-    volumes:
-      - ./app:/app
-      - ~/.m2:/root/.m2
+    build:
+      context: ./
+      dockerfile: Dockerfile
+#    volumes:
 #    分别将 Nginx 和 app 项目日志映射到宿主机的/tmp/logs，方便我们查看项目日志。
-      - /tmp/logs:/usr/local/logs
-    expose:
-      - "8080"
+#      - /tmp/logs:/usr/local/logs
+    ports:
+      - 8008:8008
 #    配置依赖服务，先启动依赖服务，再启动本服务
-    depends_on:
-      - nginx
-      - mysql
+#    depends_on:
+#      - nginx
+#      - mysql
 #    表示以这个命令来启动项目，
 #    -Dspring-boot.run.profiles=docker表示使用 application-docker.properties文件配置信息进行启动。
-    command: mvn clean spring-boot:run -Dspring-boot.run.profiles=docker
+#    command: mvn clean spring-boot:run -Dspring-boot.run.profiles=dev

@@ -1,37 +1,63 @@
 package com.example.demo.data.model;
 
+import lombok.Data;
+
+import javax.servlet.http.HttpServletResponse;
+
+@Data
 public class Result<T> {
     private int code;
     private String message;
     private T result;
 
-    public Result(int code, String message, T result) {
+    protected Result(int code, String message, T result) {
         this.code = code;
         this.message = message;
         this.result = result;
     }
 
-    public int getCode() {
-        return code;
+    @Override
+    public String toString() {
+        return "Result{" +
+                "code=" + code +
+                ", message='" + message + '\'' +
+                ", result=" + result +
+                '}';
     }
 
-    public void setCode(int code) {
-        this.code = code;
+    public static class Success<T> extends Result<T> {
+        public Success() {
+            super(HttpServletResponse.SC_OK, "success", null);
+        }
+
+        public Success(String message) {
+            super(HttpServletResponse.SC_OK, message, null);
+        }
+
+        public Success(String message, T result) {
+            super(HttpServletResponse.SC_OK, message, result);
+        }
     }
 
-    public String getMessage() {
-        return message;
-    }
+    public static class Failure<T> extends Result<T> {
+        public Failure() {
+            super(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "failure", null);
+        }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
+        public Failure(String message) {
+            super(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message, null);
+        }
 
-    public T getResult() {
-        return result;
-    }
+        public Failure(int code, String message) {
+            super(code, message, null);
+        }
 
-    public void setResult(T result) {
-        this.result = result;
+        public Failure(int code, String message, T result) {
+            super(code, message, result);
+        }
+
+        public Failure(String message, T result) {
+            super(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message, result);
+        }
     }
 }
