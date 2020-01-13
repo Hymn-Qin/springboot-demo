@@ -1,15 +1,18 @@
 package com.example.demo.security.filter;
 
 import com.example.demo.data.model.Result;
+import com.example.demo.model.User;
 import com.example.demo.security.constants.SecurityConstants;
 import com.example.demo.security.model.JwtUser;
 import com.example.demo.security.model.LoggedInUser;
 import com.example.demo.security.utils.JwtTokenUtils;
 import com.example.demo.security.utils.LoggerAuth;
+import com.example.demo.service.UserService;
 import com.example.demo.utils.ResponseOutput;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -79,7 +82,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         // Http Response Header 中返回 Token
         response.setHeader(SecurityConstants.TOKEN_HEADER, token);
 
-        Object body = new Result.Success("登录成功", null);
+        Object body = new Result.Success("登录成功", jwtUser);
         LoggerAuth.logger(request, body);
         ResponseOutput.output(response, body);
     }
@@ -94,6 +97,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException authenticationException) throws IOException {
         Object body = new Result.Failure(HttpServletResponse.SC_UNAUTHORIZED, authenticationException.getMessage());
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         ResponseOutput.output(response, body);
     }
 }

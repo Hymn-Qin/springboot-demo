@@ -9,6 +9,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -47,7 +48,26 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * 系统异常处理，比如：404,500
+     *
+     * @param req
+     * @param res
+     * @param e
+     * @return
+     */
+    @ExceptionHandler(value = Exception.class)
+    @ResponseBody
+    public Object defaultErrorHandler(HttpServletResponse res, Exception e) {
+
+        if (e instanceof org.springframework.web.servlet.NoHandlerFoundException) {
+            return exceptionResponse(HttpServletResponse.SC_NOT_FOUND,"请检查请求路径或者类型是否正确");
+        }
+        return exceptionResponse(res.getStatus(), e.getMessage());
+    }
+
+    /**
      * 参数校验报错
+     *
      * @param e
      * @return
      */

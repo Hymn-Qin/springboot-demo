@@ -232,3 +232,8 @@ tcp          0            0           127.0.0.1          0.0.0.0:* LISTEN
 将127.0.0.1  修改为本地ip地址，例如：192.168.0.100
 
 当然，有可能my.cnf文件无法直接修改  请换到root权限进行修改
+
+grant privileges on  springboot_demo.* to 'pgy'@'%' with grant option;
+
+GRANT ALL PRIVILEGES ON springboot_demo.* TO qxj@"%" IDENTIFIED BY "qxj@123.com";
+use mysql

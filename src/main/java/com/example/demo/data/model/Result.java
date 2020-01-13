@@ -8,12 +8,12 @@ import javax.servlet.http.HttpServletResponse;
 public class Result<T> {
     private int code;
     private String message;
-    private T result;
+    private T data;
 
-    protected Result(int code, String message, T result) {
+    protected Result(int code, String message, T data) {
         this.code = code;
         this.message = message;
-        this.result = result;
+        this.data = data;
     }
 
     @Override
@@ -21,7 +21,7 @@ public class Result<T> {
         return "Result{" +
                 "code=" + code +
                 ", message='" + message + '\'' +
-                ", result=" + result +
+                ", result=" + data +
                 '}';
     }
 
@@ -34,8 +34,8 @@ public class Result<T> {
             super(HttpServletResponse.SC_OK, message, null);
         }
 
-        public Success(String message, T result) {
-            super(HttpServletResponse.SC_OK, message, result);
+        public Success(String message, T data) {
+            super(HttpServletResponse.SC_OK, message, data);
         }
     }
 
@@ -52,12 +52,12 @@ public class Result<T> {
             super(code, message, null);
         }
 
-        public Failure(int code, String message, T result) {
-            super(code, message, result);
+        public Failure(int code, String message, T data) {
+            super(code, message, data);
         }
 
-        public Failure(String message, T result) {
-            super(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message, result);
+        public Failure(String message, T data) {
+            super(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message, data);
         }
     }
 }
