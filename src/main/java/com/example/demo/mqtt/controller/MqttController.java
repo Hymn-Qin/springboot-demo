@@ -22,12 +22,13 @@ public class MqttController {
 
     /**
      * 发送MQTT消息
+     *
      * @param message 消息内容
      * @return 返回
      */
     @GetMapping(value = "/mqtt")
     public Object sendMqtt(@RequestParam(value = "msg") String message) {
-        iMqttSender.sendToMqtt("topic1", message);
+        iMqttSender.sendToMqtt("topic1", 2, true, message);
         return "null";
     }
 }

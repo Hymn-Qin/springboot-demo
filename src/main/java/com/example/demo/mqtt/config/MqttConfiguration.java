@@ -155,14 +155,17 @@ public class MqttConfiguration {
         adapter.setCompletionTimeout(5000);
         adapter.setConverter(new DefaultPahoMessageConverter());
         //（1）QoS 0(At most once)“至多一次”
-        //消息发布完全依赖底层 TCP/IP 网络。会发生消息丢失或重复。这一级别可用于如下情况，环境传感器数据，丢失一次读记录无所谓，因为不久后还会有第二次发送。
+        //消息发布完全依赖底层 TCP/IP 网络。会发生消息丢失或重复。
+        //这一级别可用于如下情况，环境传感器数据，丢失一次读记录无所谓，因为不久后还会有第二次发送。
         //
         //（2）QoS 1(At least once)“至少一次”
         //确保消息到达，但消息重复可能会发生。
         //
         //（3）QoS 2(Exactly once)“只有一次”
-        //确保消息到达一次。这一级别可用于如下情况，在计费系统中，消息重复或丢失会导致不正确的结果。小型传输，开销很小（固定长度的头部是 2 字节），协议交换最小化，以降低网络流量。
-        adapter.setQos(1);
+        //确保消息到达一次。
+        //这一级别可用于如下情况，在计费系统中，消息重复或丢失会导致不正确的结果。
+        //小型传输，开销很小（固定长度的头部是 2 字节），协议交换最小化，以降低网络流量。
+        adapter.setQos(2);
         // 设置订阅通道
         adapter.setOutputChannel(mqttInboundChannel());
         return adapter;
@@ -229,4 +232,12 @@ public class MqttConfiguration {
             }
         };
     }
+    //（1）QoS 0(At most once)“至多一次”
+    //消息发布完全依赖底层 TCP/IP 网络。会发生消息丢失或重复。这一级别可用于如下情况，环境传感器数据，丢失一次读记录无所谓，因为不久后还会有第二次发送。
+    //
+    //（2）QoS 1(At least once)“至少一次”
+    //确保消息到达，但消息重复可能会发生。
+    //
+    //（3）QoS 2(Exactly once)“只有一次”
+    //确保消息到达一次。这一级别可用于如下情况，在计费系统中，消息重复或丢失会导致不正确的结果。小型传输，开销很小（固定长度的头部是 2 字节），协议交换最小化，以降低网络流量。
 }

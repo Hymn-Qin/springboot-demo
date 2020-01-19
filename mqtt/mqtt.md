@@ -3,30 +3,26 @@
 [MQTT官网](http://mqtt.org/software)
 
 ## 简介
-MQTT（MQ Telemetry Transport）消息队列遥测传输协议
+    MQTT（MQ Telemetry Transport）消息队列遥测传输协议
+    是TCP / IP协议之上，基于发布Publish/订阅Subscribe模式，机器到机器（M2M）通信，二进制传输的轻量级消息协议。1999年IBM开发，2010年对外免费开放，2014年正式成为OASIS的官方标准。
+    虽然名称里有MQ，但它不是Message Queue，它并不会保证消息的顺序。
+    和 RabbitMQ 相比：考虑在低带宽、不可靠的4G/LTE网络上运行（可靠性），多用于IoT、M2M、IM。
+    和 HTTP 相比：通信量减少（低带宽）、设备耗电量减少（低功耗）、支持消息推送、Pub/Sub模型，双向1对多/多对多通信等。
+    MQTT最小的packet大小是只有2个字节的header。 
+    目前百度、阿里、腾讯、京东、移动等都有物联网平台，而MQTT是物联网中相当重要的角色。
+    物联网环境下，大量的device或sensor需要将很小的数据定期发送出去，并接受外部传回来的数据。这样的数据交换是大量存在的。
+    MQTT通过Broker转发消息，所以可以穿透NAT，类似的协议还有AMQP、XMPP等。
+    MQTT协议里面是按照设备一直在线设计的，数据都是保存在内存里的，所以MQTT是比较吃内存的。 
 
-是TCP / IP协议之上，基于发布Publish/订阅Subscribe模式，机器到机器（M2M）通信，二进制传输的轻量级消息协议。1999年IBM开发，2010年对外免费开放，2014年正式成为OASIS的官方标准。
-
-虽然名称里有MQ，但它不是Message Queue，它并不会保证消息的顺序。
-
-和 RabbitMQ 相比：考虑在低带宽、不可靠的4G/LTE网络上运行（可靠性），多用于IoT、M2M、IM。
-和 HTTP 相比：通信量减少（低带宽）、设备耗电量减少（低功耗）、支持消息推送、Pub/Sub模型，双向1对多/多对多通信等。
-
-MQTT最小的packet大小是只有2个字节的header。 
-
-目前百度、阿里、腾讯、京东、移动等都有物联网平台，而MQTT是物联网中相当重要的角色。
-
-物联网环境下，大量的device或sensor需要将很小的数据定期发送出去，并接受外部传回来的数据。这样的数据交换是大量存在的。
-MQTT通过Broker转发消息，所以可以穿透NAT，类似的协议还有AMQP、XMPP等。
-
-MQTT协议里面是按照设备一直在线设计的，数据都是保存在内存里的，所以MQTT是比较吃内存的。 
-
-## HTTP、MQTT、Websocket、WebService有什么区别
+#### HTTP、MQTT、Websocket、WebService有什么区别
     相同点：HTTP、MQTT、Websocket均为OSI 7层模型的【应用层协议】
     注意. WebService并非通信协议，而是一种远程接口调用（RPC）的框架技术。
     不同点：如下
+___
 
-MQTT
+#### MQTT
+
+2.MQTT特性
 
 MQTT协议是为大量计算能力有限，且工作在低带宽、不可靠的网络的远程传感器和控制设备通讯而设计的协议，它具有以下主要的几项特性：
 
@@ -40,6 +36,8 @@ MQTT协议是为大量计算能力有限，且工作在低带宽、不可靠的�
     数据传输和协议交换的最小化（协议头部只有2字节），以减少网络流量
     通知机制，异常中断时通知传输双方
     使用 Last Will 和 Testament 特性通知有关各方客户端异常中断的机制；
+2.1 MQTT协议的组成
+
 实现MQTT协议需要：客户端和服务器端
 MQTT协议中有三种身份：发布者（Publish）、代理（Broker）（服务器）、订阅者（Subscribe）。其中，消息的发布者和订阅者都是客户端，消息代理是服务器，消息发布者可以同时是订阅者。
 MQTT传输的消息分为：主题（Topic）和负载（payload）两部分
@@ -49,7 +47,6 @@ MQTT传输的消息分为：主题（Topic）和负载（payload）两部分
 2.2 网络传输与应用消息
 
 MQTT会构建底层网络传输：它将建立客户端到服务器的连接，提供两者之间的一个有序的、无损的、基于字节流的双向传输。
-
 当应用数据通过MQTT网络发送时，MQTT会把与之相关的服务质量（QoS）和主题名（Topic）相关连。
 
 2.3 MQTT客户端
@@ -71,7 +68,9 @@ MQTT服务器以称为“消息代理”（Broker），可以是一个应用程�
     处理来自客户端的订阅和退订请求
     向订阅的客户转发应用程序消息
     
+___
 
+#### 各大通讯方式的比较
 HTTP
 
 HTTP是一个属于应用层的，基于TCP/IP通信协议来传递数据（HTML 文件, 图片文件, 查询结果等）。
@@ -94,72 +93,193 @@ Websocket协议（非socket）
 
 WebService：RPC框架的一种
 
-XML+XSD,SOAP和WSDL就是构成WebService平台的三大技术。
-1）XML+XSD
-1.1）WebService采用HTTP协议传输数据，采用XML格式封装数据（即XML中说明调用远程服务对象的哪个方法，传递的参数是什么，以及服务对象的 返回结果是什么）。XML是WebService平台中表示数据的格式。除了易于建立和易于分析外，XML主要的优点在于它既是平台无关的，又是厂商无关 的。无关性是比技术优越性更重要的：软件厂商是不会选择一个由竞争对手所发明的技术的。
-1.2）XML解决了数据表示的问题，但它没有定义一套标准的数据类型，更没有说怎么去扩展这套数据类型。例如，整形数到底代表什么？16位，32位，64位？这 些细节对实现互操作性很重要。XML Schema(XSD)就是专门解决这个问题的一套标准。它定义了一套标准的数据类型，并给出了一种语言来扩展这套数据类型。WebService平台就 是用XSD来作为其数据类型系统的。当你用某种语言(如VB.NET或C#)来构造一个Web service时，为了符合WebService标准，所 有你使用的数据类型都必须被转换为XSD类型。你用的工具可能已经自动帮你完成了这个转换，但你很可能会根据你的需要修改一下转换过程。
-2）SOAP
-2.1） WebService通过HTTP协议发送请求和接收结果时，发送的请求内容和结果内容都采用XML格式封装，并增加了一些特定的HTTP消息头，以说明 HTTP消息的内容格式，这些特定的HTTP消息头和XML内容格式就是SOAP协议。SOAP提供了标准的RPC方法来调用Web Service。
-2.2）SOAP协议 = HTTP协议 + XML数据格式
-SOAP协议定义了SOAP消息的格式，SOAP协议是基于HTTP协议的，SOAP也是基于XML和XSD的，XML是SOAP的数据编码方式。打个比 喻：HTTP就是普通公路，XML就是中间的绿色隔离带和两边的防护栏，SOAP就是普通公路经过加隔离带和防护栏改造过的高速公路。
-3）WSDL
+    XML+XSD,SOAP和WSDL就是构成WebService平台的三大技术。
+    1）XML+XSD
+    1.1）WebService采用HTTP协议传输数据，采用XML格式封装数据（即XML中说明调用远程服务对象的哪个方法，传递的参数是什么，以及服务对象的 返回结果是什么）。XML是WebService平台中表示数据的格式。除了易于建立和易于分析外，XML主要的优点在于它既是平台无关的，又是厂商无关 的。无关性是比技术优越性更重要的：软件厂商是不会选择一个由竞争对手所发明的技术的。
+    1.2）XML解决了数据表示的问题，但它没有定义一套标准的数据类型，更没有说怎么去扩展这套数据类型。例如，整形数到底代表什么？16位，32位，64位？这 些细节对实现互操作性很重要。XML Schema(XSD)就是专门解决这个问题的一套标准。它定义了一套标准的数据类型，并给出了一种语言来扩展这套数据类型。WebService平台就 是用XSD来作为其数据类型系统的。当你用某种语言(如VB.NET或C#)来构造一个Web service时，为了符合WebService标准，所 有你使用的数据类型都必须被转换为XSD类型。你用的工具可能已经自动帮你完成了这个转换，但你很可能会根据你的需要修改一下转换过程。
+    2）SOAP
+    2.1） WebService通过HTTP协议发送请求和接收结果时，发送的请求内容和结果内容都采用XML格式封装，并增加了一些特定的HTTP消息头，以说明 HTTP消息的内容格式，这些特定的HTTP消息头和XML内容格式就是SOAP协议。SOAP提供了标准的RPC方法来调用Web Service。
+    2.2）SOAP协议 = HTTP协议 + XML数据格式
+    SOAP协议定义了SOAP消息的格式，SOAP协议是基于HTTP协议的，SOAP也是基于XML和XSD的，XML是SOAP的数据编码方式。打个比 喻：HTTP就是普通公路，XML就是中间的绿色隔离带和两边的防护栏，SOAP就是普通公路经过加隔离带和防护栏改造过的高速公路。
+    3）WSDL
 
-Socket
-由于TCP协议有粘包和分包问题，所以传输数据时需要自定义协议，如果传输的数据报超过MSS（最大报文段长度），一定要给协议定义一个消息长度字段，确保接收端能通过缓冲完整收取消息。一个简单的协议定义：消息头部+消息长度+消息正文。
+___
+### MQTT 协议
+[MQTT协议中文版.gitbooks](https://mcxiaoke.gitbooks.io/mqtt-cn/content/mqtt/01-Introduction.html)
 
-当然，使用MQTT协议则不需要考虑这个问题，这些MQTT都已经处理好了，MQTT最长可以一次性发送256MB数据，不用考虑粘包分包的问题。
+[MQTT协议中文版.pdf](mqtt-cn.pdf)
 
-总之，TCP和MQTT本身并不矛盾，只不过基于Socket开发需要处理更多的事情，而且大多数嵌入式开发模块本身也只会提供Socket接口供厂家自定义协议。
+1.**Topic**
 
-## 选择标准
-MQTT最大的优点在于可以以极少的代码和有限的带宽，为远程设备提供实时可靠的消息服务。做为一种低开销、低带宽占用的即时通讯协议，MQTT在物联网、小型设备、移动应用等方面有广泛的应用。
-1. 非常小的通信开销（最小的消息大小为 2 字节）
-2. 支持各种流行编程语言（包括C，Java，Ruby，Python 等等）且易于使用的客户端；
-3. 支持发布 / 订阅模型，简化应用程序的开发（允许一条消息只发布一次，便可被多个消费端（应用程序 / 设备）所接收）；
-4. 提供三种不同消息传递等级，让消息能按需到达目的地，适应在不稳定工作的网络传输需求
-在移动设备上耗电率低，大约只需要 HTTP 的一半
-·很好的适应各种复杂网络，特别是受限网络
-预期并适应频繁的网络中断，能应对低速、低质量的网络
-压缩优化过后的协议，可以有效降低网络流量，从而节约网络成本
-完成同样的数据通信，MQTT只需要 HTTP 约 1/4 得数据流量
-·发布 - 订阅的消息通信协议，允许一条消息只发布一次，便可被多个消费端（应用程序 / 设备）所接收
-·能够实现设备与设备之间的点对点的双向通信。
-·对HTTP接口的兼容，能实现系统间松耦合，简化开发，方便扩展，整合。
-·提供灵活便捷的系统整合能力
+MQTT是基于topic来发布消息的，发布者在发布消息时需要指定该消息发布在哪个topic下。
 
+topic最容易的理解方式是文件夹路径。如果有成千上万的不同类型的文件要保存，为了合理放置这些文件，需要创建一系列有层次性的文件夹来管理它们。发布消息就好比把文件保存到不同的文件夹下。
+和文件夹类似，topic有主题级别，各级别之间是以斜杠(/)来分隔的。
 
-低协议开销
-MQTT 的独特之处在于，它的每消息标题可以短至 2 个字节。MQ 和 HTTP 都拥有高得多的每消息开销。对于 HTTP，为每个新请求消息重新建立 HTTP 连接会导致重大的开销。MQ 和 MQTT 所使用的永久连接显著减少了这一开销。
-对不稳定网络的容忍
-MQTT 和 MQ 能够从断开等故障中恢复，而且没有进一步的代码需求。但是，HTTP 无法原生地实现此目的，需要客户端重试编码，这可能增加幂等性问题。
-低功耗
-MQTT 是专门针对低功耗目标而设计的。HTTP 的设计没有考虑此因素，因此增加了功耗。
-数百万个连接的客户端
-在 HTTP 堆栈上，维护数百万个并发连接，需要做许多的工作来提供支持。尽管可以实现此支持，但大多数商业产品都为处理这一数量级的永久连接而进行了优化。IBM 提供了 IBM MessageSight，这是一个单机架装载服务器，经过测试能处理多达 100 万个通过 MQTT 并发连接的设备。相反，MQ 不是为大量并发客户端而设计的。
-推送通知
-您需要能够及时地将通知传递给客户。为此，必须采用某种定期轮询或推送方法；从电池、系统负载和带宽角度讲，推送是最佳解决方案。
-我们的企业可能需要在没有第三方中介的情况下发送敏感的信息。这降低了特定于操作系统的解决方案（比如 Apple iOS、Google Play 通知）作为主要传输机制的价值。
-HTTP 只允许使用一种称为COMET 的方法，使用持久的 HTTP 请求来执行推送。从客户端和服务器的角度讲，此方法都很昂贵。MQ 和 MQTT 都支持推送，这是它们的一个基本特性。
-客户端平台差异
-HTTP 和 MQTT 客户端都已在大量平台上实现。MQTT 的简单性有助于以极少的精力在额外的客户端上实现 MQTT。
-防火墙容错
-一些企业防火墙将出站连接限制到一些已定义的端口。这些端口通常被限制为 HTTP（80 端口）、HTTPS（443 端口）等。HTTP 显然可以在这些情况下运行。MQTT 可封装在一个 WebSockets 连接中，显示为一个 HTTP 升级请求，从而允许在这些情况下运行。MQ 不允许采用这种模式。
-事实上，MQTT的应用非常之广泛，几乎现在随便找一家大型的硬件、互联网企业，都可以找到MQTT的身影，例如Facebook、BP、alibaba、baidu等等
+比如： usr/home/room1/light/brightness 就有5个级别。
 
-## 几款MQTT服务器：
-
-    Apache-Apollo：一个代理服务器，在ActiveMQ基础上发展而来，可以支持STOMP、AMQP、MQTT、Openwire、SSL和WebSockets等多种协议，并且Apollo提供后台管理页面，方便开发者管理和调试。
-    EMQ：EMQ 2.0，号称百万级开源MQTT消息服务器，基于Erlang/OTP语言平台开发，支持大规模连接和分布式集群，发布订阅模式的开源MQTT消息服务器。
-    HiveMQ：一个企业级的MQTT代理，主要用于企业和新兴的机器到机器M2M通讯和内部传输，最大程度的满足可伸缩性、易管理和安全特性，提供免费的个人版。HiveMQ提供了开源的插件开发包。
-    Mosquitto：一款实现了消息推送协议MQTT v3.1的开源消息代理软件，提供轻量级的、支持可发布/可订阅的消息推送模式。
+    第1层：用户
+    第2层：场所
+    第3层：位置
+    第4层：物件
+    第5层：数据指标 
     
-## MQTT调试工具
-   
-   知道了各大平台的MQTT，同时自己也可以在内网部署MQTT服务器，那接下来没有调试工具怎么行呢，难道要用自己喜欢的语言编写一个？当然不需要。MQTT调试工具可以考虑使用HiveMQ的MQTT客户端——HiveMQ Websockets Client，这是一款基于WebSocket的浏览器MQTT客户端，支持主题订阅和发布。
+![topic_1.png](topic_1.png)
+
+(1) topic名是大小写敏感的。
+
+比如以下四个是分别不同的主题：
+
+    room1/light/brightness
+    room1/Light/brightness
+    Room1/light/brightness
+    Room1/Light/Brightness
+    
+(2) topic名中的每个主题级别可以使用任何UTF-8字符。
+
+(3) 尽可能避免使用美元符$开头。
+
+因为一般MQTT服务器都会使用$开头的topic存储统计信息。
+
+    比如：$SYS主题
+    用于存贮Broker的运行信息，只读topic不能往里publish消息。
+    $SYS主题有很多，具体可以参考：
+    http://mosquitto.org/man/mosquitto-8.html
+    https://github.com/mqtt/mqtt.github.io/wiki/SYS-Topics
+    
+(4) 通配符：+、#
+
+基于主题的消息过滤，可以使用通配符来订阅多个主题的消息。
+
+但是发布消息时，不可以使用通配符，必须指定完整的topic名，如果想发送给多个topic，需要发布多次。
+
+加号+：单层匹配
+![](topic_2.png) 
+
+井号#：多层匹配，多用于前方一致的匹配
+![](topic_3.png)
+
+准确匹配一个topic：
+![](topic_4.png)
+
+匹配所有topic：
+![](topic_5.png)
+
+2.**服务质量QoS**
+
+为了确保客户端和服务器端之间消息的送达，MQTT支持三种消息发布服务质量(QoS：Quality of Service)：
+
+    （1）QoS 0(At most once)“至多一次”
+    消息发布完全依赖底层 TCP/IP 网络。会发生消息丢失或重复。这一级别可用于如下情况，环境传感器数据，丢失一次读记录无所谓，因为不久后还会有第二次发送。
+    
+    （2）QoS 1(At least once)“至少一次”
+    确保消息到达，但消息重复可能会发生。
+    
+    （3）QoS 2(Exactly once)“只有一次”
+    确保消息到达一次。这一级别可用于如下情况，在计费系统中，消息重复或丢失会导致不正确的结果。小型传输，开销很小（固定长度的头部是 2 字节），协议交换最小化，以降低网络流量。
+
+需要*注意*的是：
+
+    这里指的是Client和Broker之间的关系，而不是Publisher和Subscriber之间的关系，在Pub/Sub模型中，Publisher和Subscriber是完全解耦的。
+    发布者在每次发布消息时都需要设置QoS，订阅者在订阅主题时也可以设置QoS。
+    发布者或者订阅者设置的QoS分别是和服务器端异步执行的。
+    即使发布者设置发布消息为QoS2，订阅者也可以通过QoS0或QoS1来订阅该消息（这样就是QoS的降级downgrade）。
+    ~~订阅者一般来说最好使用QoS2。~~
+
+以下是发布和订阅的时序图：
+
+![QoS_0](QoS_0.png)
+![QoS_1](QoS_1.png)
+![QoS_2](QoS_2.png)
+![QoS_3](QoS_s.png)
+
+通信抓包具体看看每种QoS的通信过程。 
+
+![](QoS.png)
+
+3.**保留消息和最后遗嘱** 
+
+(1) 保留消息Retained Messages
+
+MQTT中，无论是发布还是订阅都不会有任何触发事件。
+
+    1个Topic只有唯一的retain消息，Broker会保存每个Topic的最后一条retain消息。
+    每个Client订阅Topic后会立即读取到retain消息，不必要等待发送。
+    订阅Topic时可以使用通配符，就会收到匹配的每个Topic的retain消息。
+
+    发布消息时把retain设置为true，即为保留信息。
+    如果需要删除retain消息，可以发布一个空的retain消息，因为每个新的retain消息都会覆盖最后一个retain消息。
+
+主要应用：
+
+    1）如果订阅者无法和Broker连接，可以通过retain消息让订阅者在下次成功连接时一次性接收所有的内容
+    2）发布者定时发布retain消息，订阅者获取该信息后能推测发布者的状态（last good value）
+
+(2) 最后遗嘱LWT（Last Will & Testament）
+
+MQTT本身就是为信号不稳定的网络设计的，所以难免一些客户端会无故的和Broker断开连接。
+
+    当客户端连接到Broker时，可以指定LWT，Broker会定期检测客户端是否有异常。
+    当客户端异常掉线时，Broker就往连接时指定的topic里推送当时指定的LWT消息。
+
+LWT的相关信息在连接时可以设置：
+Python代码  收藏代码
+
+    client = mqtt.Client()  
+    client.will_set('test/rensanning/will', 'Last will message', 0, False)  
+    client.connect('localhost', 1883)  
 
 
-## 业界案例  百度天工车联网云
-“百度天工车联网云”是基于百度智能云天工物联网平台、百度人工智能及大数据服务平台、百度地图位置服务平台等百度基础服务平台而打造的、“云 + 端 + 内容”的智能车联网云服务平台，为传统及新能源车以及相关附属设备“数字化并上云”提供基础服务，为行业用户及领域内系统集成商构建定制化的车联网应用提供支撑。   
-主要的基础性车联网服务类型包括：“位置与轨迹”类、“监控与报警”类、“智能交互、车辆与设备管理”类、“驾驶管理”类、“智能诊断与维修”类、“内容与信息集成”类。
 
-## 金山云车联网解决方案
+LWT经常和保留消息一起使用，把每个客户端的状态保存到一个Topic下。
+比如：可以在 client1/status 里保存online或者offline的信息。
+
+正常 client.disconnect() 放开，就接收不到LWT了。 
+
+4.**连接和会话** 
+
+(1) Connection
+
+连接指的是client和broker之间，client和client之间不能直接连接。
+client和broker之间建立连接，必须先发送一个 CONNECT 消息，并附带上必要的认证信息。broker接收到 CONNECT 之后，会执行认证等处理,应答一个 CONNACK 消息。
+连接一旦建立，broker会为client保持这个连接，直到客户端发起disconnect。
+
+虽然client一般都是在router之下的局域网中，但client发起 CONNECT 给broker后，broker会保持该连接，所以**MQTT是可以穿透NAT的**。
+
+CONNECT消息
+
+    ClientId：broker内部唯一标示客户端的ID（CleanSession为true时可为空）
+    CleanSession：标示client和broker之间是否需要建立持久连接（CleanSession为false表示持久连接）
+    Username/Password：客户端验证（平文传输）
+    WillMessage：遗嘱消息
+    KeepAlive：客户端发起PING Request的时间间隔，确保连接正常。 
+
+需要注意的是，ClientId, WillMessage, Username/Password 这三项内容是存在 CONNECT 消息的
+
+(2) Session
+
+Session分为以下两种：
+
+    a）Persistent Session
+    broker 会存储订阅消息或未转发消息，为了给client存储信息需要指定ClientId。
+    如果CleanSession为false但没有指定ClientId是无法连接到broker的。
+    
+    b）Clean Session
+    broker 不会存储任何订阅消息或未转发消息，适用于只publish的客户端。
+
+当一个client连接到broker时，broker会为其创建一个session。
+这个session相关信息将会同时保存在broker和client中。
+
+session里包含以下内容：
+
+    客户端的订阅信息
+    从broker接收来的还没有ack的消息
+    发送给client的还没有ack的消息 
+
+
+
+client意外中断后发起重连broker，如果是持久session，client能够立即再获取到未接收到的消息。
+client和broker之间的连接可以通过设置不同的clean_session来变更。
+client可以是 Publisher 或者是 Subscriber 或者同时两者都是。
+
+
